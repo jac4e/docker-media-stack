@@ -4,7 +4,6 @@ services:
   tdarr:
     image: ghcr.io/haveagitgat/tdarr
     container_name: tdarr
-    network_mode: bridge
     ports:
       - "8266:8266"
     environment:
@@ -66,7 +65,5 @@ services:
       - ./tdarr/transcode_cache:/temp
     devices:
       - /dev/dri:/dev/dri
-    labels:
-      - traefik.enable=true
     profiles:
       - tdarr-gpu-nodes
