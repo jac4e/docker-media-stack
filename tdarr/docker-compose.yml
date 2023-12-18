@@ -2,7 +2,7 @@ version: '3.9'
 
 services:
   tdarr:
-    image: ghcr.io/haveagitgat/tdarr
+    image: ghcr.io/haveagitgat/tdarr:latest
     container_name: tdarr
     ports:
       - "8266:8266"
@@ -21,7 +21,7 @@ services:
       - /docker/tdarr/server:/app/server
       - /docker/tdarr/configs:/app/configs
       - /docker/tdarr/logs:/app/logs
-      - /media:/media
+      - ${DATA_ROOT}:/media
       - /transcode_cache:/temp
     labels:
       - traefik.enable=true
@@ -33,37 +33,33 @@ services:
       - homepage.name=TDarr
       - homepage.icon=tdarr.png
       - homepage.href=/tdarr
-    profiles:
-      - tdarr-server
-  
-  tdarr-node:
-    container_name: tdarr-gpu-node
-    image: ghcr.io/haveagitgat/tdarr_node:latest
-    deploy:
-      mode: replicated
-      replicas: ${GPU_COUNT}
-      resources:
-        reservations:
-          devices:
-            - capabilities: [gpu]
-              count: all
-    restart: unless-stopped
-    network_mode: service:tdarr
-    environment:
-      - PUID=${USER_ID}
-      - PGID=${GROUP_ID}
-      - TZ=${TIMEZONE}
-      - UMASK_SET=002
-      - nodeName=GPU_NODES
-      - serverIP=tdarr
-      - serverPort=8266
-      - inContainer=true
-    volumes:
-      - ./tdarr/configs:/app/configs
-      - ./tdarr/logs:/app/logs
-      - ${DATA_ROOT}:/data
-      - ./tdarr/transcode_cache:/temp
     devices:
       - /dev/dri:/dev/dri
     profiles:
-      - tdarr-gpu-nodes
+      - tdarr-server
+  
+  # tdarr-node:
+  #   image: ghcr.io/haveagitgat/tdarr_node:latest
+  #   deploy:
+  #     mode: replicated
+  #     replicas: ${GPU_COUNT}
+  #   restart: unless-stopped
+  #   network_mode: service:tdarr
+  #   environment:
+  #     - PUID=${USER_ID}
+  #     - PGID=${GROUP_ID}
+  #     - TZ=${TIMEZONE}
+  #     - UMASK_SET=002
+  #     - nodeName=GPU_Node
+  #     - serverIP=tdarr
+  #     - serverPort=8266
+  #     - inContainer=true
+  #   volumes:
+  #     - ./tdarr/configs:/app/configs
+  #     - ./tdarr/logs:/app/logs
+  #     - ${DATA_ROOT}:/data
+  #     - ./tdarr/transcode_cache:/temp
+  #   devices:
+  #     - /dev/dri:/dev/dri
+  #   profiles:
+  #     - tdarr-gpu-nodes
