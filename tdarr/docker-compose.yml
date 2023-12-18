@@ -19,9 +19,9 @@ services:
       - inContainer=true
       - nodeName=MediaServer
     volumes:
-      - /docker/tdarr/server:/app/server
-      - /docker/tdarr/configs:/app/configs
-      - /docker/tdarr/logs:/app/logs
+      - ./tdarr/server:/app/server
+      - ./tdarr/configs:/app/configs
+      - ./tdarr/logs:/app/logs
       - ${DATA_ROOT}:/media
       - /transcode_cache:/temp
     labels:
