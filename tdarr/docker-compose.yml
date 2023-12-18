@@ -22,7 +22,7 @@ services:
       - ./tdarr/server:/app/server
       - ./tdarr/configs:/app/configs
       - ./tdarr/logs:/app/logs
-      - ${DATA_ROOT}:/media
+      - ${DATA_ROOT}:/data
       - /transcode_cache:/temp
     labels:
       - traefik.enable=true
