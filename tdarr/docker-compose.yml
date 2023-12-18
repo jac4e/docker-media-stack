@@ -38,7 +38,7 @@ services:
       - tdarr-server
   
   tdarr-node:
-    container_name: tdarr-node-{{.Task.Slot}}
+    container_name: tdarr-gpu-node
     image: ghcr.io/haveagitgat/tdarr_node:latest
     deploy:
       mode: replicated
