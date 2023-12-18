@@ -1,0 +1,72 @@
+version: '3.9'
+
+services:
+  tdarr:
+    image: ghcr.io/haveagitgat/tdarr
+    container_name: tdarr
+    network_mode: bridge
+    ports:
+      - "8266:8266"
+    environment:
+      - PUID=${USER_ID}
+      - PGID=${GROUP_ID}
+      - TZ=${TIMEZONE}
+      - UMASK_SET=002
+      - serverIP=0.0.0.0
+      - serverPort=8266
+      - webUIPort=8265
+      - internalNode=true
+      - inContainer=true
+      - nodeName=MediaServer
+    volumes:
+      - /docker/tdarr/server:/app/server
+      - /docker/tdarr/configs:/app/configs
+      - /docker/tdarr/logs:/app/logs
+      - /media:/media
+      - /transcode_cache:/temp
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.tdarr.rule=(Host(`${DOMAIN_NAME}`) && PathPrefix(`/tdarr`))
+      - traefik.http.routers.tdarr.tls=true
+      - traefik.http.routers.tdarr.tls.certresolver=myresolver
+      - traefik.http.services.tdarr.loadbalancer.server.port=8265
+      - homepage.group=Media
+      - homepage.name=TDarr
+      - homepage.icon=tdarr.png
+      - homepage.href=/tdarr
+    profiles:
+      - tdarr-server
+  
+  tdarr-node:
+    container_name: tdarr-node-{{.Task.Slot}}
+    image: ghcr.io/haveagitgat/tdarr_node:latest
+    deploy:
+      mode: replicated
+      replicas: ${GPU_COUNT}
+      resources:
+        reservations:
+          devices:
+            - capabilities: [gpu]
+              count: all
+    restart: unless-stopped
+    network_mode: service:tdarr
+    environment:
+      - PUID=${USER_ID}
+      - PGID=${GROUP_ID}
+      - TZ=${TIMEZONE}
+      - UMASK_SET=002
+      - nodeName=GPU_NODES
+      - serverIP=tdarr
+      - serverPort=8266
+      - inContainer=true
+    volumes:
+      - ./tdarr/configs:/app/configs
+      - ./tdarr/logs:/app/logs
+      - ${DATA_ROOT}:/data
+      - ./tdarr/transcode_cache:/temp
+    devices:
+      - /dev/dri:/dev/dri
+    labels:
+      - traefik.enable=true
+    profiles:
+      - tdarr-gpu-nodes
