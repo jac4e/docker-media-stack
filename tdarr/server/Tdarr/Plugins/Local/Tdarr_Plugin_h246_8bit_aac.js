@@ -1,7 +1,7 @@
 /* eslint no-plusplus: ["error", { "allowForLoopAfterthoughts": true }] */
 
 const details = () => ({
-    id: 'nxCnnqhew',
+    id: 'Tdarr_Plugin_h246_8bit_aac',
     Stage: 'Pre-processing', // Preprocessing or Post-processing. Determines when the plugin will be executed.
     Name: 'Custom-Transcode to H264 8 Bit AAC using FFMPEG and NVENC/QSV/VA-API/CPU',
     Type: 'Video',

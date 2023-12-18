@@ -34,7 +34,7 @@ const details = () => {
         {
           name: "bitrate",
           type: 'string',
-          defaultValue: '',
+          defaultValue: '640k',
           inputUI: {
             type: 'text',
           },

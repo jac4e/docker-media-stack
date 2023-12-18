@@ -23,11 +23,25 @@ const details = () => ({
   
     let encodeMethod = "libx264"
   
-    // if (otherArguments['workerType'] == "transcodegpu") {
-    if (otherArguments['nodeHardwareType'] == "nvenc") {
-      encodeMethod = "h264_nvenc"
+    if (otherArguments['workerType'] == "transcodegpu") {
+        switch (otherArguments['nodeHardwareType']) {
+            case "nvenc":
+                // Encode on nvidia through nvenc
+                encodeMethod = "h264_nvenc"
+                break;
+            case "qsv":
+                // Encode on intel through qsv
+                encodeMethod = "h264_qsv"
+                break;
+            case "vaapi":
+                // Encode on amd through vaapi
+                encodeMethod = "h264_vaapi"
+                break;
+            default:
+                // Encode on cpu
+                encodeMethod = "libx264"
+        }
     }
-    // }
   
     const response = {
       processFile: false,
