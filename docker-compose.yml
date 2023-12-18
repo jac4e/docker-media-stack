@@ -386,7 +386,7 @@ services:
     network_mode: bridge
     ports:
       - "8266:8266"
-    enivronment:
+    environment:
       - PUID=${USER_ID}
       - PGID=${GROUP_ID}
       - TZ=${TIMEZONE}
