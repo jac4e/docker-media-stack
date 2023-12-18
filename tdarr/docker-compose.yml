@@ -5,7 +5,8 @@ services:
     image: ghcr.io/haveagitgat/tdarr:latest
     container_name: tdarr
     ports:
-      - "8266:8266"
+      - "8265:8265" # WebUI
+      - "8266:8266" # Server
     environment:
       - PUID=${USER_ID}
       - PGID=${GROUP_ID}
