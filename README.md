@@ -25,6 +25,7 @@ I am running it in Ubuntu Server 22.04; I also tested this setup on a [Synology 
   * [Prowlarr](#prowlarr)
   * [qBittorrent](#qbittorrent)
   * [Jellyfin](#jellyfin)
+  * [Tdarr](#tdarr)
   * [Homepage](#homepage)
   * [Jellyseerr](#jellyseerr)
   * [Traefik and SSL Certificates](#traefik-and-ssl-certificates)
@@ -56,6 +57,7 @@ I am running it in Ubuntu Server 22.04; I also tested this setup on a [Synology 
 |----------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------|--------------|
 | [Sonarr](https://sonarr.tv)                                          | PVR for newsgroup and bittorrent users                                                                                                               | [linuxserver/sonarr](https://hub.docker.com/r/linuxserver/sonarr)                        | /sonarr      |
 | [Radarr](https://radarr.video)                                       | Movie collection manager for Usenet and BitTorrent users                                                                                             | [linuxserver/radarr](https://hub.docker.com/r/linuxserver/radarr)                        | /radarr      |
+| [Tdarr](https://tdarr.io)                                            | Optional - Transcode media files using FFmpeg<br/>Enable with `COMPOSE_PROFILES=tdarr` and/or `COMPOSE_PROFILES=tdarr-gpu-nodes`| [haveagitgat/tdarr](https://hub.docker.com/r/haveagitgat/tdarr)                                      | /tdarr       |
 | [Lidarr](https://lidarr.audio)                                       | Music collection manager for Usenet and BitTorrent users                                                                                             | [linuxserver/lidarr](https://hub.docker.com/r/linuxserver/lidarr)                        | /lidarr      |
 | [Prowlarr](https://github.com/Prowlarr/Prowlarr)                     | Indexer aggregator for Sonarr and Radarr                                                                                                             | [linuxserver/prowlarr:latest](https://hub.docker.com/r/linuxserver/prowlarr)             | /prowlarr    |
 | [PIA WireGuard VPN](https://github.com/thrnz/docker-wireguard-pia)   | Encapsulate qBittorrent traffic in [PIA](https://www.privateinternetaccess.com/) using [WireGuard](https://www.wireguard.com/) with port forwarding. | [thrnz/docker-wireguard-pia](https://hub.docker.com/r/thrnz/docker-wireguard-pia)        |              |
@@ -98,7 +100,7 @@ If you want to show Jellyfin information in the homepage, create it in Jellyfin 
 | `PIA_USER`                     | PIA username                                                                                                                                                                                           |                                                  |
 | `PIA_PASS`                     | PIA password                                                                                                                                                                                           |                                                  |
 | `PIA_LOCAL_NETWORK`            | PIA local network                                                                                                                                                                                      | `192.168.0.0/16`                                 |
-| `HOSTNAME`                     | Hostname of the NAS, could be a local IP or a domain name                                                                                                                                              | `localhost`                                      |
+| `DOMAIN_NAME`                  | Hostname of the NAS, could be a local IP or a domain name                                                                                                                                              | `localhost`                                      |
 | `ADGUARD_HOSTNAME`             | Optional - AdGuard Home hostname used, if enabled                                                                                                                                                      |                                                  |
 | `ADGUARD_USERNAME`             | Optional - AdGuard Home username to show details in the homepage, if enabled                                                                                                                           |                                                  |
 | `ADGUARD_PASSWORD`             | Optional - AdGuard Home password to show details in the homepage, if enabled                                                                                                                           |                                                  |
@@ -124,6 +126,7 @@ If you want to show Jellyfin information in the homepage, create it in Jellyfin 
 | `HOMEPAGE_VAR_WEATHER_LAT`     | Homepage weather city latitude                                                                                                                                                                         |                                                  |
 | `HOMEPAGE_VAR_WEATHER_LONG`    | Homepage weather city longitude                                                                                                                                                                        |                                                  |
 | `HOMEPAGE_VAR_WEATHER_UNIT`    | Homepage weather unit, either `metric` or `imperial`                                                                                                                                                   | `metric`                                         |
+| `GPU_COUNT`                   | Number of GPUs to use for Tdarr gpu transcoding, if enabled                                                                                                                                           |                                                  |
 
 ## PIA WireGuard VPN
 
@@ -209,6 +212,10 @@ devices:
 
 Generally, running Docker on Linux you will want to use VA-API, but the exact mount paths may differ depending on your
 hardware.
+
+## Tdarr
+
+Tdarr is a transcoding tool that can be used to convert media files to a different format, for example to reduce their size.
 
 ## Homepage
 
