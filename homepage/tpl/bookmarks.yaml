@@ -3,6 +3,6 @@
 # https://gethomepage.dev/en/configs/bookmarks
 
 - Credits:
-    - Docker-Compose-NAS:
+    - Docker-Media-Server:
         - abbr: NAS
-          href: https://github.com/AdrienPoupa/docker-compose-nas
+          href: https://github.com/jac4e/docker-media-server
