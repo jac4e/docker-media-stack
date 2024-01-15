@@ -1,0 +1,51 @@
+version: "3.9"
+services:
+  plutotv-scraper:
+    profiles:
+      - iptv
+    build: PlutoTV.Dockerfile
+    container_name: plutotv-scraper
+    restart: unless-stopped
+    volumes:
+      - ${DATA_ROOT}/iptv:/data/iptv
+    environment:
+      - PUID=$PUID
+      - PGID=$PGID
+      - TZ=$TIME_ZONE
+  samsung-tv:
+    profiles:
+      - iptv
+    image: matthuisman/samsung-tvplus-for-channels
+    container_name: samsung-tv
+    restart: unless-stopped
+    volumes:
+      - ${DATA_ROOT}/iptv:/data/iptv
+    environment:
+      - PUID=$PUID
+      - PGID=$PGID
+      - TZ=$TIME_ZONE
+  xteve:
+    profiles:
+      - iptv
+    container_name: xteve
+    environment:
+      - PUID=$PUID
+      - PGID=$PGID
+      - TZ=$TIME_ZONE
+    ports:
+      - 34400:34400
+    volumes:
+      - ./xteve:/home/xteve/conf
+      - ./xteve/temp:/tmp/xteve
+    image: 'dnsforge/xteve'
+    labels: 
+      - autoheal=$AUTOHEAL_RESTART
+    healthcheck:
+      test: curl -fSs http://127.0.0.1:34400 || exit 1
+      start_period: 180s
+      timeout: 10s
+      interval: 10s
+      retries: 3
+    restart: unless-stopped
+
+

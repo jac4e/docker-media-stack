@@ -23,7 +23,8 @@ services:
       - ./tdarr/configs:/app/configs
       - ./tdarr/logs:/app/logs
       - ${DATA_ROOT}:/data
-      - /transcode_cache:/temp
+      - ${DOWNLOAD_ROOT}:/data/torrents
+      - ${TRANSCODE_ROOT}:/temp
     labels:
       - traefik.enable=true
       - traefik.http.routers.tdarr.rule=(Host(`${DOMAIN_NAME}`) && PathPrefix(`/tdarr`))
@@ -34,33 +35,41 @@ services:
       - homepage.name=TDarr
       - homepage.icon=tdarr.png
       - homepage.href=/tdarr
+      - homepage.description=Bulk transcoder
+      - homepage.weight=5
+      - homepage.widget.type=tdarr
+      - homepage.widget.url=http://tdarr:8265
     devices:
       - /dev/dri:/dev/dri
     profiles:
       - tdarr-server
-  
-  # tdarr-node:
-  #   image: ghcr.io/haveagitgat/tdarr_node:latest
-  #   deploy:
-  #     mode: replicated
-  #     replicas: ${GPU_COUNT}
-  #   restart: unless-stopped
-  #   network_mode: service:tdarr
-  #   environment:
-  #     - PUID=${USER_ID}
-  #     - PGID=${GROUP_ID}
-  #     - TZ=${TIMEZONE}
-  #     - UMASK_SET=002
-  #     - nodeName=GPU_Node
-  #     - serverIP=tdarr
-  #     - serverPort=8266
-  #     - inContainer=true
-  #   volumes:
-  #     - ./tdarr/configs:/app/configs
-  #     - ./tdarr/logs:/app/logs
-  #     - ${DATA_ROOT}:/data
-  #     - ./tdarr/transcode_cache:/temp
-  #   devices:
-  #     - /dev/dri:/dev/dri
-  #   profiles:
-  #     - tdarr-gpu-nodes
+
+  tdarr-node:
+    image: ghcr.io/haveagitgat/tdarr_node:latest
+    container_name: tdarr
+    ports:
+      - "8265:8265" # WebUI
+      - "8266:8266" # Server
+    environment:
+      - PUID=${USER_ID}
+      - PGID=${GROUP_ID}
+      - TZ=${TIMEZONE}
+      - UMASK_SET=002
+      - serverIP=${TDARR_SERVER_IP}
+      - serverPort=8266
+      - inContainer=true
+      - nodeName=TdarrNode
+    volumes:
+      - ./tdarr/server:/app/server
+      - ./tdarr/configs:/app/configs
+      - ./tdarr/logs:/app/logs
+      - ./tdarr/transcode_cache:/temp
+    labels:
+      - homepage.group=Media
+      - homepage.name=TDarr
+      - homepage.icon=tdarr.png
+      - homepage.href=/tdarr
+    # devices:
+    #   - /dev/dri:/dev/dri
+    profiles:
+      - tdarr-node

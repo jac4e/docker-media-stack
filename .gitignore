@@ -22,6 +22,7 @@ docker-compose.override.yml
 /letsencrypt
 !/letsencrypt/.gitkeep
 /jellyfin
+!/jellyfin/Dockerfile
 !/jellyfin/.gitkeep
 /jellyseerr
 !/jellyseerr/.gitkeep
@@ -32,3 +33,9 @@ docker-compose.override.yml
 !/adguardhome/work/.gitkeep
 /sabnzbd
 !/sabnzbd/.gitkeep
+/tdarr
+!/tdarr/docker-compose.yml
+!/tdarr/.gitkeep
+# /plexdebrid
+!/plexdebrid/docker-compose.yml
+!/plexdebrid/.gitkeep

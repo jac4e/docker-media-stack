@@ -39,6 +39,8 @@ services:
       interval: 5s
       retries: 10
   sonarr:
+    profiles:
+      - media-server
     image: lscr.io/linuxserver/sonarr
     container_name: sonarr
     environment:
@@ -47,10 +49,15 @@ services:
       - TZ=${TIMEZONE}
     volumes:
       - ./sonarr:/config
-      - ${DATA_ROOT}:/data
+      - ${DATA_ROOT}/media:/data/media
+      - ${DOWNLOAD_ROOT}:/data/torrents
     restart: always
+    network_mode: "service:vpn"
+    depends_on:
+      vpn:
+        condition: service_healthy
     healthcheck:
-      test: [ "CMD", "curl", "--fail", "http://127.0.0.1:8989/sonarr/ping" ]
+      test: [ "CMD", "curl", "--fail", "http://127.0.0.1:8989/sonarr/ping", "https://google.com" ]
       interval: 5s
       retries: 10
     labels:
@@ -69,6 +76,8 @@ services:
       - homepage.widget.url=http://sonarr:8989/sonarr
       - homepage.widget.key=${SONARR_API_KEY}
   radarr:
+    profiles:
+      - media-server
     image: lscr.io/linuxserver/radarr
     container_name: radarr
     environment:
@@ -77,10 +86,15 @@ services:
       - TZ=${TIMEZONE}
     volumes:
       - ./radarr:/config
-      - ${DATA_ROOT}:/data
+      - ${DATA_ROOT}/media:/data/media
+      - ${DOWNLOAD_ROOT}:/data/torrents
+    network_mode: "service:vpn"
+    depends_on:
+      vpn:
+        condition: service_healthy
     restart: always
     healthcheck:
-      test: [ "CMD", "curl", "--fail", "http://127.0.0.1:7878/radarr/ping" ]
+      test: [ "CMD", "curl", "--fail", "http://127.0.0.1:7878/radarr/ping", "https://google.com" ]
       interval: 5s
       retries: 10
     labels:
@@ -99,6 +113,8 @@ services:
       - homepage.widget.url=http://radarr:7878/radarr
       - homepage.widget.key=${RADARR_API_KEY}
   lidarr:
+    profiles:
+      - media-server
     image: lscr.io/linuxserver/lidarr
     container_name: lidarr
     environment:
@@ -107,10 +123,15 @@ services:
       - TZ=${TIMEZONE}
     volumes:
       - ./lidarr:/config
-      - ${DATA_ROOT}:/data
+      - ${DATA_ROOT}/media:/data/media
+      - ${DOWNLOAD_ROOT}:/data/torrents
+    network_mode: "service:vpn"
+    depends_on:
+      vpn:
+        condition: service_healthy
     restart: always
     healthcheck:
-      test: [ "CMD", "curl", "--fail", "http://127.0.0.1:8686/lidarr/ping" ]
+      test: [ "CMD", "curl", "--fail", "http://127.0.0.1:8686/lidarr/ping", "https://google.com" ]
       interval: 5s
       retries: 10
     labels:
@@ -129,6 +150,8 @@ services:
       - homepage.widget.url=http://lidarr:8686/lidarr
       - homepage.widget.key=${LIDARR_API_KEY}
   jellyseerr:
+    profiles:
+      - media-server
     image: fallenbagel/jellyseerr:latest
     container_name: jellyseerr
     environment:
@@ -198,6 +221,8 @@ services:
       - homepage.widget.url=http://jellyseerr:5055
       - homepage.widget.key=${JELLYSEERR_API_KEY}
   prowlarr:
+    profiles:
+      - media-server
     image: lscr.io/linuxserver/prowlarr:latest
     container_name: prowlarr
     environment:
@@ -206,9 +231,13 @@ services:
       - TZ=${TIMEZONE}
     volumes:
       - ./prowlarr:/config
+    network_mode: "service:vpn"
+    depends_on:
+      vpn:
+        condition: service_healthy
     restart: always
     healthcheck:
-      test: [ "CMD", "curl", "--fail", "http://127.0.0.1:9696/prowlarr/ping" ]
+      test: [ "CMD", "curl", "--fail", "http://127.0.0.1:9696/prowlarr/ping", "https://google.com" ]
       interval: 5s
       retries: 10
     labels:
@@ -227,7 +256,7 @@ services:
       - homepage.widget.url=http://prowlarr:9696/prowlarr
       - homepage.widget.key=${PROWLARR_API_KEY}
   qbittorrent:
-    image: lscr.io/linuxserver/qbittorrent:libtorrentv1
+    image: lscr.io/linuxserver/qbittorrent:4.6.0-libtorrentv1
     container_name: qbittorrent
     environment:
       - PUID=${USER_ID}
@@ -304,7 +333,12 @@ services:
       # network mode is not supported: https://github.com/containrrr/watchtower/issues/1286#issuecomment-1214291660
       - com.centurylinklabs.watchtower.enable=false
   jellyfin:
-    image: lscr.io/linuxserver/jellyfin
+    profiles:
+      - media-server
+    # image: lscr.io/linuxserver/jellyfin
+    build:
+      context: ./jellyfin
+      dockerfile: Dockerfile
     container_name: jellyfin
     environment:
       - PUID=${USER_ID}
