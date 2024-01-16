@@ -41,7 +41,7 @@ services:
     volumes:
       - ./threadfin:/home/threadfin/conf
       - ${DATA_ROOT}/iptv:/data/iptv
-    image: 'dnsforge/xteve'
+    image: fyb3roptik/threadfin
     healthcheck:
       test: curl -fSs http://127.0.0.1:34400 || exit 1
       start_period: 180s
