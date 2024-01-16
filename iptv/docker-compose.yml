@@ -3,7 +3,9 @@ services:
   plutotv-scraper:
     profiles:
       - iptv
-    build: PlutoTV.Dockerfile
+    build:
+      context: ./iptv
+      dockerfile: PlutoTV.Dockerfile
     container_name: plutotv-scraper
     restart: unless-stopped
     volumes:
