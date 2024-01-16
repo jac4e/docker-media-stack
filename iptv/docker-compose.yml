@@ -19,7 +19,7 @@ services:
       - iptv
     image: matthuisman/samsung-tvplus-for-channels
     ports:
-      - 8182:8182
+      - 8182:80
     container_name: samsung-tv
     restart: unless-stopped
     volumes:
@@ -43,8 +43,6 @@ services:
       - ./xteve/temp:/tmp/xteve
       - ${DATA_ROOT}/iptv:/data/iptv
     image: 'dnsforge/xteve'
-    labels: 
-      - autoheal=$AUTOHEAL_RESTART
     healthcheck:
       test: curl -fSs http://127.0.0.1:34400 || exit 1
       start_period: 180s
