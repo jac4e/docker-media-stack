@@ -18,6 +18,8 @@ services:
     profiles:
       - iptv
     image: matthuisman/samsung-tvplus-for-channels
+    ports:
+      - 8182:8182
     container_name: samsung-tv
     restart: unless-stopped
     volumes:
@@ -34,11 +36,10 @@ services:
       - PUID=${USER_ID}
       - PGID=${GROUP_ID}
       - TZ=${TIMEZONE}
-    ports:
-      - 34400:34400
     volumes:
       - ./xteve:/home/xteve/conf
       - ./xteve/temp:/tmp/xteve
+      - ${DATA_ROOT}/iptv:/data/iptv
     image: 'dnsforge/xteve'
     labels: 
       - autoheal=$AUTOHEAL_RESTART
