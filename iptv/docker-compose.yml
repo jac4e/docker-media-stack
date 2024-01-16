@@ -32,6 +32,8 @@ services:
     profiles:
       - iptv
     container_name: xteve
+    ports:
+      - 34400:34400
     environment:
       - PUID=${USER_ID}
       - PGID=${GROUP_ID}
