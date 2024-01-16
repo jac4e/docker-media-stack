@@ -9,9 +9,9 @@ services:
     volumes:
       - ${DATA_ROOT}/iptv:/data/iptv
     environment:
-      - PUID=$PUID
-      - PGID=$PGID
-      - TZ=$TIME_ZONE
+      - PUID=${USER_ID}
+      - PGID=${GROUP_ID}
+      - TZ=${TIMEZONE}
   samsung-tv:
     profiles:
       - iptv
@@ -21,17 +21,17 @@ services:
     volumes:
       - ${DATA_ROOT}/iptv:/data/iptv
     environment:
-      - PUID=$PUID
-      - PGID=$PGID
-      - TZ=$TIME_ZONE
+      - PUID=${USER_ID}
+      - PGID=${GROUP_ID}
+      - TZ=${TIMEZONE}
   xteve:
     profiles:
       - iptv
     container_name: xteve
     environment:
-      - PUID=$PUID
-      - PGID=$PGID
-      - TZ=$TIME_ZONE
+      - PUID=${USER_ID}
+      - PGID=${GROUP_ID}
+      - TZ=${TIMEZONE}
     ports:
       - 34400:34400
     volumes:
