@@ -28,10 +28,10 @@ services:
       - PUID=${USER_ID}
       - PGID=${GROUP_ID}
       - TZ=${TIMEZONE}
-  xteve:
+  threadfin:
     profiles:
       - iptv
-    container_name: xteve
+    container_name: threadfin
     ports:
       - 34400:34400
     environment:
@@ -39,8 +39,7 @@ services:
       - PGID=${GROUP_ID}
       - TZ=${TIMEZONE}
     volumes:
-      - ./xteve:/home/xteve/conf
-      - ./xteve/temp:/tmp/xteve
+      - ./threadfin:/home/threadfin/conf
       - ${DATA_ROOT}/iptv:/data/iptv
     image: 'dnsforge/xteve'
     healthcheck:
