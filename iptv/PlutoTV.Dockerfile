@@ -23,8 +23,8 @@ RUN sed -i 's/"outdir": ".",/"outdir": "\/data\/iptv",/g' /app/config.json
 # with random UUID in config.json
 RUN sed -i 's/"clientID": "00000000-0000-0000-0000-000000000000"/"clientID": "'$(uuidgen)'"/g' /app/config.json
 
-# Add cron job for plutotv-scraper (every hour)
-RUN echo "0 * * * * /usr/local/bin/plutotv-scraper" > /etc/crontabs/root
+# Add cron job for plutotv-scraper (every hour) (working dir: /app)
+RUN echo "0 * * * * cd /app && /usr/local/bin/plutotv-scraper" > /etc/crontabs/root
 
 # Run cron
 CMD ["crond", "-f", "-d", "8"]
